@@ -10,10 +10,14 @@ import Foundation
 import XCTest
 
 open class CucumberTest: XCTestCase {
+    static var didRun = false
+    
     override public class var defaultTestSuite: XCTestSuite {
         Cucumber.shared.reporters.forEach { $0.testSuiteStarted(at: Date()) }
 
         let suite = XCTestSuite(forTestCaseClass: CucumberTest.self)
+        guard !Self.didRun else { return suite }
+        Self.didRun = true
 
         Cucumber.shared.features.removeAll()
         if let bundle = (Cucumber.shared as? StepImplementation)?.bundle {
